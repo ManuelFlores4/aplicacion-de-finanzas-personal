@@ -1,63 +1,81 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { Button } from 'react-bootstrap';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Asegúrate de que Bootstrap se aplique correctamente
-import Real from './Sidebar'; // Importa el componente Real.js
-import Login from './Login';
+import { Navbar, Nav, Container, Card, Button} from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 
-// Componente principal de App
+// Configuración de Chart.js
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+// Datos y opciones del gráfico
+const chartData = {
+  labels: ['Comidas y Bebidas', 'Compras', 'Viviendas', 'Transporte', 'Gastos financieros'],
+  datasets: [
+    {
+      label: 'Gastos (en unidades)',
+      data: [120, 90, 70, 40, 60],
+      backgroundColor: ['#007bff', '#6610f2', '#6f42c1', '#e83e8c', '#dc3545'],
+    },
+  ],
+};
+
+const chartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Gastos por Categoría',
+    },
+  },
+};
+
 function App() {
-  const navigate = useNavigate(); // Hook para la redirección programática
-
-  // Funciones que redirigen al hacer clic en los botones
-  const handleRealClick = () => {
-    navigate('/sidebar');
-  };
-
- 
-
-  const handleLoginClick = () => {
-    navigate('/login');
-  };
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Edit <code>src/App.js</code> and save to reload.</p>
-        <h2>Profesor: Ricardo</h2>
-        <h2>Alumno: Javier Audante Jesus</h2>
-        <h1>Curso: Aplicación Móvil</h1>
-        
-        {/* Botones para redirigir a diferentes componentes */}
-        <Button variant="primary" onClick={handleRealClick}>
-          Ir a Menu
-        </Button>
-       
-        <Button variant="primary" onClick={handleLoginClick}>
-          Ir a Formulario
-        </Button>
-      </header>
+    <div>
+      {/* Menú de navegación */}
+      <Navbar bg="dark" variant="dark" expand="lg">
+        <Container>
+          <Navbar.Brand href="/">Aplicacion financiamiento personal</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ml-auto">
+              <Nav.Link href="/">Inicio</Nav.Link>
+              <Nav.Link href="#productos">Cuentas</Nav.Link>
+              <Nav.Link href="#grafico">Gráfico</Nav.Link>
+              <Nav.Link href="#contacto">Contacto</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      {/* Gráfico de ventas */}
+      <Container className="my-5" id="grafico">
+        <h2 className="mb-4">Gráfico de gastos de este mes</h2>
+        <Bar data={chartData} options={chartOptions} />
+      </Container>
+
+      {/* Información adicional */}
+      <Container className="my-5">
+        <Card>
+          <Card.Body>
+            <Card.Title>Sobre el financiamiento personal</Card.Title>
+            <Card.Text>
+              En nuestra tienda encontrarás las últimas tendencias en ropa para todas las edades y estilos. Nos
+              especializamos en ofrecer productos de alta calidad a precios accesibles.
+            </Card.Text>
+            <Button variant="primary" href="#productos">
+              Ver Productos
+            </Button>
+          </Card.Body>
+        </Card>
+      </Container>
     </div>
   );
 }
 
-// Componente envolvente con Router para manejar las rutas
-function AppWrapper() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/sidebar" element={<Real />} /> {/* Ruta para Real.js */}
-   
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </Router>
-  );
-}
-
-export default AppWrapper;
+export default App;
 
 
